@@ -22,7 +22,7 @@
 #' @export
 #'
 BLEND <- function(bulk, phi, alpha = 1e-3, beta = 1e-3, ncore=50,
-                  method = c("EMMAP"),
+                  method = c("EMMAP", "GIBBS"),
                   sample.idx=seq(from = 502, to = 2500, by = 2),
                   n.iter = 5000, thres = 1e-5){
   # Keep genes that are sufficient for statistical analysis
