@@ -2,7 +2,7 @@
 
 #' @title BLEND
 #' @description Estimate cell type fractions of bulk RNA-seq data using multiple references
-#'
+#' @useDynLib BLEND
 #' @param bulk bulk RNA-seq data. Counts. Genes by samples.
 #' @param phi cell type-specific gene expression references. A list of length of the number of cell types. Each element of the list is a genes by reference matrix.
 #' @param alpha numeric. prior for cellular fraction Dirichlet distribution.
@@ -78,8 +78,8 @@ BLEND <- function(bulk, phi, alpha = 1e-3, beta = 1e-3, ncore=50,
     if(method == "EMMAP"){
       cl <- makeCluster(ncore)
       registerDoParallel(cl)
-      est.res <- foreach(i = 1:ncol(bulk), .errorhandling='pass', .packages = c("Rcpp", "RcppArmadillo"),.noexport = "compute_U_n") %dopar% {
-
+      est.res <- foreach(i = 1:ncol(bulk), .errorhandling='pass', .packages = c("Rcpp", "RcppArmadillo","BLEND")) %dopar% {
+        # source("./R/RcppExports.R")
         BLEND_EMMAP(X_n = bulk[,i], phi = phi, alpha = alpha, beta = beta,
                     n.iter = n.iter,
                     thres = thres)

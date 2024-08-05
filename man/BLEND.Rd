@@ -10,7 +10,7 @@ BLEND(
   alpha = 0.001,
   beta = 0.001,
   ncore = 50,
-  method = c("EMMAP", "GIBBS"),
+  method = c("EMMAP"),
   sample.idx = seq(from = 502, to = 2500, by = 2),
   n.iter = 5000,
   thres = 1e-05
@@ -27,7 +27,7 @@ BLEND(
 
 \item{ncore}{the number of cores that will be used for computation.}
 
-\item{method}{posterior inference technique that will be used.}
+\item{method}{posterior inference technique that will be used. Default is "EMMAP." Can be chosen between "EMMAP" and "GIBBS".}
 
 \item{sample.idx}{vector, index of Gibbs samples to be used for parameter estimation.}
 

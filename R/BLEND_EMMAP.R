@@ -11,7 +11,7 @@ BLEND_EMMAP <- function(X_n, phi, alpha, beta, n.iter = 5000,
   Ms <- unlist(lapply(phi, ncol)) # numbers of available references for cell types
   cumsum_Ms <- cumsum(Ms)
   cumsum_Ms_Ms <- cumsum_Ms - Ms + 1
-  sourceCpp("src/code.cpp")
+  # sourceCpp("./src/code.cpp")
   # Initialization
   mu_n.i <- rep(1/CT, CT) # vector of length CT
   psi_n.i <- list() # list of length CT, each element has length Ms[[i]]

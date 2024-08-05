@@ -12,4 +12,4 @@ Encoding: UTF-8
 RoxygenNote: 7.2.1
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
-Packaged: 2024-08-03 00:07:52 UTC; shibowang
+Packaged: 2024-08-05 05:30:08 UTC; shibowang
