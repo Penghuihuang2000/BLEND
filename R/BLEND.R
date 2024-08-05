@@ -91,6 +91,7 @@ BLEND <- function(bulk, phi, alpha = 1e-3, beta = 1e-3, ncore=50,
   gc()
   for(i in 1:length(est.res)){
     names(est.res[[i]][[1]]) <- names(phi)
+    names(est.res[[i]][[2]]) <- names(phi)
     for(j in 1:length(est.res[[i]][[2]])){
       if(! is.null(colnames(phi[[j]]))){names(est.res[[i]][[2]][[j]]) <- colnames(phi[[j]])}
     }
