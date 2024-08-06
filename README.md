@@ -117,10 +117,9 @@ time.EMMAP <- system.time(res.EMMAP <- BLEND(bulk = BLEND_example$bulk,
              phi = BLEND_example$reference,
              method = "EMMAP",
              ncore = 30))[3]
-cat("\n Average running time per sample using one core: ",round((time.EMMAP*30)/(30*60),1), "min")
+cat("Average running time per sample using one core: ",round((time.EMMAP*30)/(30*60),1), "min")
 ```
 
-    ## 
     ##  Average running time per sample using one core:  2 min
 
 ``` r
@@ -134,10 +133,9 @@ time.GIBBS <- system.time(res.GIBBS <- BLEND(bulk = BLEND_example$bulk,
 
 
 ``` r
-cat("\n Average running time per sample using one core: ",round((time.GIBBS*30)/(30*60),1), "min")
+cat("Average running time per sample using one core: ",round((time.GIBBS*30)/(30*60),1), "min")
 ```
 
-    ## 
     ##  Average running time per sample using one core:  13.8 min
 
 Here, we explain the results using the first bulk sample as an example.
