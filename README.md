@@ -132,7 +132,6 @@ time.GIBBS <- system.time(res.GIBBS <- BLEND(bulk = BLEND_example$bulk,
              ncore = 30))[3]
 ```
 
-    ## No group or design set. Assuming all samples belong to one group.
 
 ``` r
 cat("\n Average running time per sample using one core: ",round((time.GIBBS*30)/(30*60),1), "min")
