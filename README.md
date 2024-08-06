@@ -11,6 +11,11 @@ representation for deconvolution.
 
 **No reference quality evaluation needed!**
 
+<figure>
+  <img src="BLEND logo.pdf" style="width:35.0%" alt="BLEND logo" />
+  <figcaption aria-hidden="true">BLEND logo</figcaption>
+</figure>
+
 ## Installation
 
 ``` r
