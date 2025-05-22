@@ -21,8 +21,8 @@
 #' @importFrom stats rgamma rmultinom
 #' @export
 #'
-BLEND <- function(bulk, phi, alpha = 1e-3, beta = 1e-3, ncore=50,
-                  method = c("EMMAP"),
+BLEND <- function(bulk, phi, alpha = 1.00001, beta = 1.00001, ncore=50,
+                  method = c("EMMAP", "GIBBS"),
                   sample.idx=seq(from = 502, to = 2500, by = 2),
                   n.iter = 5000, thres = 1e-5){
   # Keep genes that are sufficient for statistical analysis
@@ -30,6 +30,14 @@ BLEND <- function(bulk, phi, alpha = 1e-3, beta = 1e-3, ncore=50,
   keep.gene <- edgeR::filterByExpr(bulk)
   keep.gene <- names(keep.gene)[keep.gene]
   bulk <- bulk[keep.gene,]
+  
+  # The situation where there's a cell type with only one reference
+  for(i in 1:length(phi)){
+    if(is.null(ncol(phi[[i]]))){
+      phi[[i]] <- as.matrix(cbind(phi[[i]], phi[[i]]))
+      colnames(phi[[i]]) <- c("ref1","ref1_rep")
+    }
+  }
 
   # Bulk and reference shared genes
   reference.gene <- Reduce(intersect, lapply(phi, rownames))

@@ -6,10 +6,11 @@ Version: 0.1.0
 Author: c(person("Penghui", "Huang", role = c('aut', 'cre'), email = 'huangpenghui@pitt.edu'), person("Manqi", "Cai", role = c('aut'), email = 'mac538@pitt.edu'))
 Maintainer: Penghui Huang <huangpenghui@pitt.edu>
 Description: Package of BLEND: Probabilistic Cellular Deconvolution with Automated Reference Selection. Unified framework to perform automated reference selection using multiple references to deconvolve bulk RNA-seq data.
-Imports: doParallel, edgeR, foreach, parallel, Rcpp, stats
+Imports: doParallel, edgeR, foreach, parallel, Rcpp, stats,
+        RcppArmadillo
 License: GPL (>= 3)
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.2
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
-Packaged: 2024-08-05 05:30:08 UTC; shibowang
+Packaged: 2025-05-22 14:59:35 UTC; penghuihuang

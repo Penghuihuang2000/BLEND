@@ -7,10 +7,10 @@
 BLEND(
   bulk,
   phi,
-  alpha = 0.001,
-  beta = 0.001,
+  alpha = 1.00001,
+  beta = 1.00001,
   ncore = 50,
-  method = c("EMMAP"),
+  method = c("EMMAP", "GIBBS"),
   sample.idx = seq(from = 502, to = 2500, by = 2),
   n.iter = 5000,
   thres = 1e-05
