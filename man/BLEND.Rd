@@ -10,7 +10,7 @@ BLEND(
   alpha = 1.00001,
   beta = 1.00001,
   ncore = 50,
-  method = c("EMMAP", "GIBBS"),
+  method = c("mixSQP", "EMMAP", "GIBBS"),
   sample.idx = seq(from = 502, to = 2500, by = 2),
   n.iter = 5000,
   thres = 1e-05
@@ -27,16 +27,16 @@ BLEND(
 
 \item{ncore}{the number of cores that will be used for computation.}
 
-\item{method}{posterior inference technique that will be used. Default is "EMMAP." Can be chosen between "EMMAP" and "GIBBS".}
+\item{method}{posterior inference technique that will be used. Default is "mixSQP." Options are "mixSQP", "EMMAP", "GIBBS".}
 
-\item{sample.idx}{vector, index of Gibbs samples to be used for parameter estimation.}
+\item{sample.idx}{vector, only for method = "GIBBS", index of Gibbs samples to be used for parameter estimation.}
 
 \item{n.iter}{maximum iterations allowed in EM-MAP.}
 
 \item{thres}{stopping criterion in EM-MAP.}
 }
 \value{
-a list whose elements are the estimation results for each bulk sample
+a list, cellular fractions and reference mixing proportions
 }
 \description{
 Estimate cell type fractions of bulk RNA-seq data using multiple references
