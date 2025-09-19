@@ -19,7 +19,7 @@ representation for deconvolution.
 
 ``` r
 if (!"BLEND" %in% rownames(installed.packages())) {
-  install_github('Penghuihuang2000/BLEND')
+  devtools::install_github('Penghuihuang2000/BLEND')
 }
 library(BLEND)
 ```
@@ -38,7 +38,7 @@ names(BLEND_example)
 
     ## [1] "bulk"      "reference" "cell_size"
 
-Bulk data must be counts.
+Bulk data must be counts. Linear scale transformed reference is allowed.
 
 ``` r
 dim(BLEND_example$bulk) # 6377 genes 30 bulk samples
@@ -105,114 +105,79 @@ BLEND_example$cell_size
 
 ## Deconvolution
 
-Two estimation strategies are provided: Gibbs sampling and EM-MAP
-algorithm. They provide consistent estimates. EM-MAP algorithm is times
-faster than the Gibbs sampler. Because it estimates parameters directly
-and is implemented using Rcpp.
+Three estimation strategies are provided: mixSQP, Gibbs sampling, and EM-MAP
+algorithm. They provide consistent estimates. The mixSQP algorithm is our latest algorithm and is
+faster than the EM-MAP algorithm and the Gibbs sampler. Speed: mixSQP > EM-MAP >> Gibbs.
+
+``` r
+## Default estimation algorithm (the fastest)
+## Run mixSQP for parameter estimation
+## Use 5 cores for computation
+time.mixSQP <- system.time(res.mixSQP <- BLEND(bulk = BLEND_example$bulk,
+             phi = BLEND_example$reference,
+             method = "mixSQP",
+             ncore = 5))[3]
+cat("Average running time per sample using one core: ",round((time.mixSQP*5)/30,1), "sec")
+```
+
+    ## Average running time per sample using one core:  0.6 sec
+
 
 ``` r
 ## Run EMMAP for parameter estimation
-## Use 30 cores for computation
+## Use 5 cores for computation
 time.EMMAP <- system.time(res.EMMAP <- BLEND(bulk = BLEND_example$bulk,
              phi = BLEND_example$reference,
              method = "EMMAP",
-             ncore = 30))[3]
-cat("Average running time per sample using one core: ",round((time.EMMAP*30)/(30*60),1), "min")
+             ncore = 5))[3]
+cat("Average running time per sample using one core: ",round((time.EMMAP*5)/(30*60),1), "min")
 ```
 
-    ##  Average running time per sample using one core:  2 min
+    ## Average running time per sample using one core:  0.5 min
 
 ``` r
 ## Run Gibbs sampler for parameter estimation
-## Use 30 cores for computation
-time.GIBBS <- system.time(res.GIBBS <- BLEND(bulk = BLEND_example$bulk,
-             phi = BLEND_example$reference,
-             method = "GIBBS",
-             ncore = 30))[3]
+## Use 5 cores for computation
+#time.GIBBS <- system.time(res.GIBBS <- BLEND(bulk = BLEND_example$bulk,
+#             phi = BLEND_example$reference,
+#             method = "GIBBS",
+#             ncore = 5))[3]
+#cat("Average running time per sample using one core: ",round((time.GIBBS*30)/(30*60),1), "min")
 ```
 
 
-``` r
-cat("Average running time per sample using one core: ",round((time.GIBBS*30)/(30*60),1), "min")
-```
-
-    ##  Average running time per sample using one core:  13.8 min
-
-Here, we explain the results using the first bulk sample as an example.
+Here, we retrieve estimation results.
 
 ``` r
 ## cellular fractions
-res.EMMAP[[1]]$`cellular frac`
+round(res.mixSQP$cellular_fraction[1:6,], 3)
 ```
 
-    ##       Astrocytes       Endothelia       Excitatory       Inhibitory 
-    ##     0.5081756057     0.0716156096     0.2021741995     0.0001397791 
-    ##        Microglia Oligodendrocytes             OPCs 
-    ##     0.0302405858     0.1871124131     0.0005418072
+    ##          Astrocytes Endothelia Excitatory Inhibitory Microglia Oligodendrocytes
+    ## sample_1      0.509      0.072      0.203      0.000     0.029            0.187
+    ## sample_2      0.541      0.067      0.057      0.000     0.013            0.321
+    ## sample_3      0.484      0.033      0.073      0.033     0.032            0.303
+    ## sample_4      0.275      0.029      0.541      0.048     0.002            0.091
+    ## sample_5      0.250      0.032      0.451      0.028     0.013            0.209
+    ## sample_6      0.365      0.062      0.362      0.025     0.026            0.161
+    ##           OPCs
+    ## sample_1 0.000
+    ## sample_2 0.000
+    ## sample_3 0.041
+    ## sample_4 0.013
+    ## sample_5 0.016
+    ## sample_6 0.000
 
 ``` r
-## Reference mixing proportions
-res.EMMAP[[1]]$`ref prop`
+## reference mixing proportions for excitatory neuron
+## Interpretation: the underlying excitatory neuron cell type-specific gene expression is likely in between CA and LK references' expression 
+round(res.mixSQP$reference_mix_prop$Excitatory[1:6,],3)
 ```
 
-    ## $Astrocytes
-    ##           CA           DM           IP           F5           MM           LK 
-    ## 4.500419e-03 1.482121e-05 4.847398e-01 2.771210e-01 1.242334e-01 4.035938e-05 
-    ##           VL           NG           TS 
-    ## 2.071604e-05 1.093285e-01 9.969070e-07 
-    ## 
-    ## $Endothelia
-    ##           CA           DM           IP           MM           LK           VL 
-    ## 4.992578e-05 2.126598e-05 7.366538e-01 3.597212e-05 2.630072e-01 1.885855e-04 
-    ##           NG           TS 
-    ## 3.551273e-05 7.726283e-06 
-    ## 
-    ## $Excitatory
-    ##           CA           LK           VL           NG           TS 
-    ## 5.356335e-01 4.641954e-01 3.221351e-05 1.360754e-04 2.817460e-06 
-    ## 
-    ## $Inhibitory
-    ##          CA          LK          VL          NG          TS 
-    ## 0.054266383 0.726236897 0.039835533 0.175864093 0.003797094 
-    ## 
-    ## $Microglia
-    ##           CA           DM           IP           MM           LK           VL 
-    ## 1.824513e-04 1.162601e-04 5.250361e-05 2.076964e-05 1.975170e-02 9.674254e-01 
-    ##           NG           TS 
-    ## 1.245092e-02 0.000000e+00 
-    ## 
-    ## $Oligodendrocytes
-    ##           CA           DM           IP           MM           LK           VL 
-    ## 8.304891e-02 3.497426e-05 1.970021e-01 1.578281e-01 5.618905e-01 7.749996e-05 
-    ##           NG           TS 
-    ## 1.149087e-04 2.959614e-06 
-    ## 
-    ## $OPCs
-    ##          CA          DM          LK          VL          NG          TS 
-    ## 0.087776815 0.013908403 0.874975991 0.008380233 0.013927592 0.001030967
-
-``` r
-## number of updates till convergence
-res.EMMAP[[1]]$n.cvg
-```
-
-    ## [1] 638
-
-Now, we extract cellular fractions estimated using EM-MAP and Gibbs
-sampling. They provide consistent fraction estimates. Thus, in
-applications, we recommend using EMMAP option.
-
-``` r
-frac.EMMAP <- rlist::list.rbind(lapply(res.EMMAP, function(x){x[[1]]}))
-frac.GIBBS <- rlist::list.rbind(lapply(res.GIBBS, function(x){x[[1]]}))
-mean(abs(frac.EMMAP - frac.GIBBS))
-```
-
-    ## [1] 0.0003759182
-
-Use cell size adjustment to get cell fractions.
-
-``` r
-frac.cell <- t(apply(frac.EMMAP, 1, function(x){(x/BLEND_example$cell_size)/
-    sum(x/BLEND_example$cell_size)}))
-```
+    ##             CA    LK VL    NG TS
+    ## sample_1 0.539 0.461  0 0.000  0
+    ## sample_2 0.699 0.301  0 0.000  0
+    ## sample_3 1.000 0.000  0 0.000  0
+    ## sample_4 0.634 0.260  0 0.106  0
+    ## sample_5 0.748 0.252  0 0.000  0
+    ## sample_6 0.476 0.421  0 0.103  0
