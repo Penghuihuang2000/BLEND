@@ -142,6 +142,7 @@ BLEND <- function(bulk, phi, alpha = 1.00001, beta = 1.00001, ncore=50,
   colnames(est_frac) <- ct_name
   rownames(est_frac) <- bulk_sample_name
   for(i in 1:length(est_ref_mix_prop)){
+    if(is.vector(est_ref_mix_prop[[i]])){est_ref_mix_prop[[i]] <- matrix(est_ref_mix_prop[[i]], ncol = 1)}
     rownames(est_ref_mix_prop[[i]]) <- bulk_sample_name
     colnames(est_ref_mix_prop[[i]]) <- reference_name.list[[i]]
   }
