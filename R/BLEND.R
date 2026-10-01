@@ -74,7 +74,7 @@ BLEND <- function(bulk, phi, alpha = 1.00001, beta = 1.00001, ncore=50,
     return(0)
   }
   bulk <- bulk[inter.gene,]
-  phi <- lapply(phi, function(x){x[inter.gene,]})
+  phi <- lapply(phi, function(x){x[inter.gene,,drop=F]})
 
   # Drop genes that are not expressed in all cell types' references at all
   gene.names <- rownames(bulk)
@@ -85,7 +85,7 @@ BLEND <- function(bulk, phi, alpha = 1.00001, beta = 1.00001, ncore=50,
   drop.gene <- unique(drop.gene)
   if(length(drop.gene)!=0){
     bulk <- bulk[-drop.gene,]
-    phi <- lapply(phi, function(x){x[-drop.gene,]})
+    phi <- lapply(phi, function(x){x[-drop.gene,,drop=F]})
     gene.names <- gene.names[-drop.gene]
   }
 
